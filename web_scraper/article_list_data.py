@@ -20,10 +20,15 @@ def _get_creator_name_and_image(article):
 
 def _get_article_like_and_response(article):
 	article_likes_and_responses_div_tag = article.find("div", class_="u-paddingTop10")
+	print("DIV", article_likes_and_responses_div_tag.prettify())
 	article_likes_div_tag = article_likes_and_responses_div_tag.find("div", class_="u-floatLeft")
 	article_likes_inner_div_tag = article_likes_div_tag.find("div", class_="u-flexCenter")
 	article_likes_count = article_likes_inner_div_tag.find("span", class_="u-relative").button.text
-	article_response_count = article_likes_and_responses_div_tag.find("a", class_="u-baseColor--buttonNormal").text
+	print("Likes", article_likes_count)
+	try:
+		article_response_count = article_likes_and_responses_div_tag.find("a", class_="u-baseColor--buttonNormal").text
+	except:
+		article_response_count = "No Response count found for this article"
 	return article_likes_count, article_response_count
 
 
@@ -34,14 +39,23 @@ def _get_article_title_and_image(article):
 	except:
 		article_title = article_title_and_image_div_tag.find("h3", class_="graf--title").text
 	article_image_figure_tag = article_title_and_image_div_tag.find("figure", class_="graf--figure")
-	article_image_div_tag = article_image_figure_tag.find("div", class_="aspectRatioPlaceholder is-locked")
-	article_image_url = article_image_div_tag.find("img", class_="graf-image")['src']
+	try:
+		article_image_div_tag = article_image_figure_tag.find("div", class_="aspectRatioPlaceholder is-locked")
+		article_image_url = article_image_div_tag.find("img", class_="graf-image")['src']
+		# print("THIS",article_image_url)
+
+	except:
+		article_image_div_tag = None
+		article_image_url = "Image Not Found"
 	return article_title, article_image_url
 
 
 def _get_article_detail_page_url(article):
-	article_detail_page_div_tag = article.find("div", class_="postArticle-readMore")
-	article_detail_page_url = article_detail_page_div_tag.find("a", class_="button--smaller")['href']
+	try:
+		article_detail_page_div_tag = article.find("div", class_="postArticle-readMore")
+		article_detail_page_url = article_detail_page_div_tag.find("a", class_="button--smaller")['href']
+	except:
+		article_detail_page_url = "Detail Page Does not exits"
 	return article_detail_page_url
 
 
@@ -65,6 +79,7 @@ def _get_combined_data(soup):
 		}
 		article_data[count_of_article] = article_dictionary
 		count_of_article += 1
+		print("DICT", article_data)
 	return article_data
 
 
