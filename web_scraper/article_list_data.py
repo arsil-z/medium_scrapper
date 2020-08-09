@@ -1,23 +1,24 @@
-import requests
-from bs4 import BeautifulSoup
+from .utils import _get_soup
 
 
 # Article List Page Data
 
-def execute(url):
-	soup = BeautifulSoup(url, 'lxml')
-	r = get_combined_data(soup)
-	return r
+
+def get_url_on_search(url):
+	soup = _get_soup(url)
+	combined_data_dictionary = _get_combined_data(soup)
+	tags = _get_tags(soup)
+	return combined_data_dictionary, tags
 
 
-def get_creator_name_and_image(article):
+def _get_creator_name_and_image(article):
 	creator_details_flexbox_tag = article.find('div', class_="u-flexCenter")
 	creator_name = creator_details_flexbox_tag.find("a", class_="ds-link").text
 	creator_image_url = creator_details_flexbox_tag.find('img', class_="avatar-image")['src']
 	return creator_name, creator_image_url
 
 
-def get_article_like_and_response(article):
+def _get_article_like_and_response(article):
 	article_likes_and_responses_div_tag = article.find("div", class_="u-paddingTop10")
 	article_likes_div_tag = article_likes_and_responses_div_tag.find("div", class_="u-floatLeft")
 	article_likes_inner_div_tag = article_likes_div_tag.find("div", class_="u-flexCenter")
@@ -26,7 +27,7 @@ def get_article_like_and_response(article):
 	return article_likes_count, article_response_count
 
 
-def get_article_title_and_image(article):
+def _get_article_title_and_image(article):
 	article_title_and_image_div_tag = article.find("div", class_="section-inner")
 	try:
 		article_title = article_title_and_image_div_tag.find("h2", class_="graf--title").text
@@ -38,21 +39,20 @@ def get_article_title_and_image(article):
 	return article_title, article_image_url
 
 
-def get_article_detail_page_url(article):
+def _get_article_detail_page_url(article):
 	article_detail_page_div_tag = article.find("div", class_="postArticle-readMore")
 	article_detail_page_url = article_detail_page_div_tag.find("a", class_="button--smaller")['href']
 	return article_detail_page_url
 
 
-def get_combined_data(soup):
+def _get_combined_data(soup):
 	article_data = {}
-
 	count_of_article = 0
 	for article in soup.find_all('div', class_="postArticle"):
-		creator_details = get_creator_name_and_image(article)
-		article_title_and_image = get_article_title_and_image(article)
-		article_detail_page_url = get_article_detail_page_url(article)
-		article_like_and_response_count = get_article_like_and_response(article)
+		creator_details = _get_creator_name_and_image(article)
+		article_title_and_image = _get_article_title_and_image(article)
+		article_detail_page_url = _get_article_detail_page_url(article)
+		article_like_and_response_count = _get_article_like_and_response(article)
 
 		article_dictionary = {
 			"creator_name": creator_details[0],
@@ -68,22 +68,21 @@ def get_combined_data(soup):
 	return article_data
 
 
-# def get_complete_article_data():
-# 	complete_article_data = get_combined_data(soup)
-# 	return complete_article_data
-
-
-# def get_artilce_detail_page_url(id):
-# 	complete_data = get_complete_article_data()
-# 	instance_ = complete_data[id]
-# 	print(instance_['article_details_page_url'])
-# 	return instance_['article_details_page_url']
-# get_artilce_detail_page_url(3)
-
-def get_tags(soup):
+def _get_tags(soup):
 	tags_ul_tag = soup.find("ul", class_="tags tags--postTags tags--light")
 	tags_list = []
 	for tag in tags_ul_tag.find_all("a", class_="link u-baseColor--link"):
 		tags_list.append(tag.text)
-	print(tags_list)
+	# print(tags_list)
 	return tags_list
+
+
+def _get_article_detail_url(url):
+	soup = _get_soup(url)
+	article_detail_url_dictionary = {}
+	count_of_article = 0
+	for article in soup.find_all('div', class_="postArticle"):
+		article_detail_page_url = _get_article_detail_page_url(article)
+		article_detail_url_dictionary[count_of_article] = article_detail_page_url
+		count_of_article += 1
+	return article_detail_url_dictionary
