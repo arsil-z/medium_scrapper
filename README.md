@@ -1,6 +1,6 @@
 # Medium Scrapper
 
-A Django based web application system, scraping articles from [Article's Official website](https://medium.com/).
+A Django based web application system, scraping articles from [Medium's Official website](https://medium.com/).
 
 ## Getting Started
 
@@ -82,13 +82,13 @@ And guess what you have successfully configured this system to run on you machin
 
 ### Home Page:
 
-This page allows you to search for any topic, the result will be scraped from [Article's Official website](https://medium.com/).
+This page allows you to search for any topic, the result will be scraped from [Medium's Official website](https://medium.com/).
 
 ![Home Page](./MediumScraperImages/HomePage.png)
 
 ### Results:
 
-Results are scraped in real-time from [Article](https://medium.com/) i.e., as soon as one article is scraped that gets diplayed on front-end.
+Results are scraped in real-time from [Medium](https://medium.com/) i.e., as soon as one article is scraped that gets diplayed on front-end.
 
 ![Result Page](./MediumScraperImages/ScrapedArticle.png)
 
