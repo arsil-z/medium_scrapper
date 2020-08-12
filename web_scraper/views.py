@@ -3,7 +3,6 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import ArticleDetail
 from .utils import _get_url_to_fetch_data
 from django.http import StreamingHttpResponse, HttpResponse
-# Create your views here.
 from .article_list_data import get_url_on_search
 import json
 
@@ -22,11 +21,7 @@ def article_list_view_streaming(request):
 
 
 def article_list_view(request):
-	# search_query = "javascript"
-	# source_url = _get_url_to_fetch_data(search_query)
-	# # response, tags = get_url_on_search(source_url)
-	# response = get_url_on_search(source_url)
-	# print("R", response)
+
 	return render(request, 'web_scraper/list.html')
 
 
@@ -41,13 +36,3 @@ def article_detail_view(request):
 	}
 	return render(request, "web_scraper/detail.html", context)
 
-
-def article_search_by_tag(request, search_query):
-	source_url = _get_url_to_fetch_data(search_query)
-	response, tags = get_url_on_search(source_url)
-	context = {
-		'response': response,
-		'search_query': search_query,
-		"tags": tags
-	}
-	return render(request, "web_scraper/result_by_tag.html", context)

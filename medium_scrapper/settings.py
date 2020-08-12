@@ -87,8 +87,8 @@ DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql',
 		'NAME': 'medium_scraper',
-		'USER': get_env_value('DB_USER'),
-		'PASSWORD': get_env_value('DB_PASSWORD'),
+		'USER': 'postgres',
+		'PASSWORD': 'Arshil@99',
 		'HOST': 'localhost',
 		'PORT': '5432',
 	}
