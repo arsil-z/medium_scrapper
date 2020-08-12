@@ -80,7 +80,7 @@
 
 		function getFinalOutput_(data, temp) {
 			let article_det = data["article_details_page_url"];
-			let article_detail_url = `articles/detail?blog_url=${article_det}`;
+			let article_detail_url = `/articles/detail?blog_url=${article_det}`;
 			temp += `<div class="card mb-3 align-self-center">
 			  <a href="${article_detail_url}" ><img class="card-img-top" src=${data["article_image_url"]} alt="${data["article_title"]}"></a>
 			  <div class="card-body">

@@ -1,11 +1,17 @@
 {% extends 'web_scraper/base.html' %}
 {% block content %}
 	<nav class="navbar navbar-light bg-light mb-3">
+		<h3>Welcome! to Medium's Crawler type topic you want to search in the below field.</h3>
 		<form class="form-inline" method="POST">
 			{% csrf_token %}
-			<input id="search_query" class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search"
-				   name="search_query">
-			<button id="get-articles" class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
+			<div class="input-group mb-3">
+				<input id="search_query" type="text" class="form-control " placeholder="Search"
+					   name="search_query">
+				<div class="input-group-append">
+					<button id="get-articles" class="btn btn-outline-secondary" type="button">Scrape</button>
+				</div>
+			</div>
+
 		</form>
 	</nav>
 	<div class="row">
@@ -67,8 +73,7 @@
 			  <div class="card-body">
 				<h5 class="card-title">${data["article_title"]}</h5>
 				<p class="card-text">${data["article_likes_count"]} <i class="fas fa-thumbs-up"></i> &nbsp;&emsp; ${data["article_likes_count"]}  <i class="fas fa-comments"></i></p>
-				<p class="card-text"><img class="rounded-circle" src=${data["creator_image_url"]} alt=${data["creator_name"]}> &emsp; <h3 class="text-muted">${data["creator_name"]}</h3></p>
-  `;
+				<p class="card-text"><img class="rounded-circle" src=${data["creator_image_url"]} alt=${data["creator_name"]}> &emsp; <h3 class="text-muted">${data["creator_name"]}</h3></p>`;
 
 
 			let tag_list = data["tags_list"];
@@ -79,7 +84,7 @@
 			return temp;
 		}
 
-	function getQuery() {
+		function getQuery() {
 			let query = document.getElementById("search_query").value;
 			console.log(query);
 			return query;

@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -87,8 +88,8 @@ DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql',
 		'NAME': 'medium_scraper',
-		'USER': 'postgres',
-		'PASSWORD': 'Arshil@99',
+		'USER': get_env_value('DB_USER'),
+		'PASSWORD': get_env_value('DB_PASSWORD'),
 		'HOST': 'localhost',
 		'PORT': '5432',
 	}
@@ -129,3 +130,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+SCRAPING_SLEEP_TIME = 1
