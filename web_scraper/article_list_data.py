@@ -23,9 +23,10 @@ def _save_article_to_database(article):
 
 def _save_article_details_to_database(article):
 	detail_url = article["article_details_page_url"]
+	article_details_ = get_blog_detail(detail_url)
 	article_details, created_ = ArticleDetail.objects.get_or_create(url=detail_url)
+
 	if created_:
-		article_details_ = get_blog_detail(detail_url)
 		article_details.title = article_details_['blog_title']
 		article_details.image = article_details_['blog_image_url']
 		article_details.likes = article_details_['blog_claps_count']
@@ -35,6 +36,16 @@ def _save_article_details_to_database(article):
 		article_details.creator = article_details_['creator_name']
 		article_details.creator_image = article_details_['creator_image_url']
 		article_details.save()
+	# elif ArticleDetail.objects.filter(url=detail_url).exists():
+	# 	article_details.title = article_details_['blog_title']
+	# 	article_details.image = article_details_['blog_image_url']
+	# 	article_details.likes = article_details_['blog_claps_count']
+	# 	article_details.responses = article_details_['blog_response_count']
+	# 	article_details.tags = article_details_['blog_tags_list']
+	# 	article_details.paragraph = article_details_['blog_paragraph_list']
+	# 	article_details.creator = article_details_['creator_name']
+	# 	article_details.creator_image = article_details_['creator_image_url']
+	# 	article_details.save()
 
 
 def get_url_on_search(url):
