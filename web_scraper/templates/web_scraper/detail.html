@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+	<h1>{{ article.title }}</h1>
+	<img src="{{ article.image }}" alt="{{ article.title }}">
+	<h2>{{ article.creator }}</h2>
+	<img src="{{ article.creator_image }}" alt="{{ article.creator }}">
+	<h3>{{ article.likes }}</h3>
+	<h3>{{ article.responses }}</h3>
+	<ul>
+		{% for tag in article.tags %}
+		<li><button onclick="xmlRequest('{{ tag }}')">{{ tag }}</button></li>
+		{% endfor %}
+	</ul>
+	<ul>
+		{% for paragraph in article.paragraph %}
+		<ol>{{ paragraph }}</ol>
+		{% endfor %}
+	</ul>
+<div id="article-div" class="article-div">
+	<p></p>
+</div>
+</body>
+
+</html>
+
+<script>
+
+	function getToken(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+    var csrftoken = getToken('csrftoken');
+
+
+	function xmlRequest(query) {
+	let xmlhttp = new XMLHttpRequest();
+
+	url = "{% url 'article_list_view_streaming' %}";
+	xmlhttp.onload = () => {
+		let data = xmlhttp.response;
+	};
+	const sendData = JSON.stringify({ search_query: query });
+	xmlhttp.onprogress = (event) => {
+		let splittedList = xmlhttp.responseText.split("$");
+		let temp = '';
+		var finalOutput = '';
+		for (let i = 0; i < splittedList.length - 1; i++) {
+			let data = JSON.parse(splittedList[i]);
+			finalOutput += getFinalOutput(data, temp);
+			document.body.innerHTML = finalOutput;
+        }
+
+    };
+    xmlhttp.open("POST", url);
+    xmlhttp.setRequestHeader('Content-Type', 'application/json;', 'X-CSRFToken', csrftoken);
+    xmlhttp.send(sendData);
+}
+
+function getFinalOutput(data, temp) {
+	let article_det = data["article_details_page_url"];
+	let article_detail_url = `articles/detail?blog_url=${article_det}`;
+	temp += `<h1>${data["creator_name"]}</h1><br>
+		<img src="${data["creator_image_url"]}">
+		<img height="500" width="500" src=${data["article_image_url"]}>`;
+
+	temp += `<a href="${article_detail_url}"><h1>${data["article_title"]}</h1></a> <ul>`;
+
+	let tag_list = data["tags_list"];
+	tag_list.forEach((tag) => {
+		temp += `<li><button onclick="xmlRequest(' +${tag} + ')">${tag}</button></li>`;
+	});
+	temp += "</ul>";
+	return temp;
+}
+
+
+
+</script>
+
+
