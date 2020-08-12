@@ -1,14 +1,16 @@
 import requests
 from bs4 import BeautifulSoup
-from .utils import _get_soup
-from .article_list_data import _get_article_detail_page_url
 # Article Detail Page Data
+
 
 
 def get_creator_details(blog_detail_main_div_tag):
 	blog_heading_and_creator_div_tag = blog_detail_main_div_tag.div
 	blog_heading_tag = blog_heading_and_creator_div_tag.h1
-	blog_heading = blog_heading_tag.text  #
+	try:
+		blog_heading = blog_heading_tag.text  #
+	except:
+		blog_heading = "No heading fetched for this Blog"
 	try:
 		blog_creator_div_tag = blog_heading_and_creator_div_tag.find("div", class_="o n")
 		blog_creator_image_tag = blog_creator_div_tag.find("div")
@@ -21,7 +23,10 @@ def get_creator_details(blog_detail_main_div_tag):
 
 
 def get_blog_image_and_paragraphs(blog_detail_figure_tag, blog_detail_p_tags):
-	blog_image_url = blog_detail_figure_tag.find("img")["src"]
+	try:
+		blog_image_url = blog_detail_figure_tag.find("img")["src"]
+	except:
+		blog_image_url = "No Image"
 	blog_description_data = [] #
 	for p in blog_detail_p_tags:
 		blog_description_data.append(p.text)
@@ -70,19 +75,3 @@ def get_blog_detail(url):
 	return result_dictionary
 
 
-def _get_id_of_article_url_page(url):
-	soup = _get_soup(url)
-	article_detail_url_dictionary = {}
-	count_of_article = 0
-	for article in soup.find_all('div', class_="postArticle"):
-		article_detail_page_url = _get_article_detail_page_url(article)
-		article_detail_url_dictionary[count_of_article] = article_detail_page_url
-		count_of_article += 1
-	return article_detail_url_dictionary
-
-
-def _get_detail_page_url_by_id(url, id):
-	detail_page_urls = _get_id_of_article_url_page(url)
-	detail_url = detail_page_urls[id]
-	blog_detail_dictionary = get_blog_detail(detail_url)
-	return blog_detail_dictionary

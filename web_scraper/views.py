@@ -1,34 +1,45 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from .models import ArticleDetail
 from .utils import _get_url_to_fetch_data
-
+from django.http import StreamingHttpResponse, HttpResponse
 # Create your views here.
-from .article_list_data import get_url_on_search, _get_article_detail_url
-from .article_detail_data import _get_detail_page_url_by_id
+from .article_list_data import get_url_on_search
+import json
+
+
+@csrf_exempt
+def article_list_view_streaming(request):
+	if request.method == "POST":
+		data = json.loads(request.body)
+		# print("DATA", data)
+		search_query = data['search_query']
+		source_url = _get_url_to_fetch_data(search_query)
+		response = get_url_on_search(source_url)
+		data = response
+		# print(data)
+		return StreamingHttpResponse(data, content_type='text/event-stream')
 
 
 def article_list_view(request):
-	response = ""
-	search_query = ""
-	tags = ""
-	if request.method == "POST":
-		search_query = request.POST["search_query"]
-		source_url = _get_url_to_fetch_data(search_query)
-		response, tags = get_url_on_search(source_url)
-	context = {
-		'response': response,
-		'search_query': search_query,
-		"tags": tags
-	}
-	return render(request, "web_scraper/home.html", context)
+	# search_query = "javascript"
+	# source_url = _get_url_to_fetch_data(search_query)
+	# # response, tags = get_url_on_search(source_url)
+	# response = get_url_on_search(source_url)
+	# print("R", response)
+	return render(request, 'web_scraper/list.html')
 
 
-def article_detail_view(request, search_query, key):
-	query_url = _get_url_to_fetch_data(search_query)
-	blog_detail_dictionary = _get_detail_page_url_by_id(query_url, key)
+def article_detail_view(request):
+	url = request.GET.get('blog_url')
+	if url is None:
+		return HttpResponse('Blog url was not provided', status=400)
+	article = ArticleDetail.objects.get(url=url)
+	print(article)
 	context = {
-		"blog_detail_dictionary": blog_detail_dictionary
+		'article': article
 	}
-	return render(request, "web_scraper/blog_detail.html", context)
+	return render(request, "web_scraper/detail.html", context)
 
 
 def article_search_by_tag(request, search_query):
