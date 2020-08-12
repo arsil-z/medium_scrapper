@@ -4,7 +4,7 @@ import time
 from .utils import _get_soup
 from .models import Article, ArticleDetail
 from .article_detail_data import get_blog_detail
-
+from django.conf import settings
 
 # Article List Page Data
 
@@ -51,7 +51,7 @@ def _save_article_details_to_database(article):
 def get_url_on_search(url):
 	soup = _get_soup(url)
 	for article in _get_combined_data(soup):
-		time.sleep(1)
+		time.sleep(settings.SCRAPING_SLEEP_TIME)
 		_save_article_to_database(article)
 		_save_article_details_to_database(article)
 		yield json.dumps(article) + '$'
