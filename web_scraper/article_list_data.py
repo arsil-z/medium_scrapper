@@ -10,7 +10,11 @@ from django.conf import settings
 
 def _save_article_to_database(article):
 	article_image_url = article["article_image_url"]
-	article_, created = Article.objects.get_or_create(detail_url=article_image_url)
+	try:
+		article_, created = Article.objects.get_or_create(detail_url=article_image_url)
+	except:
+		print("Database Settings", settings.DATABASES)
+		raise
 	article_.title = article['article_title']
 	article_.image = article['article_image_url']
 	article_.likes = article['article_likes_count']
