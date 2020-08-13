@@ -25,9 +25,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'zzo7d@=_4pk0q#4(_tpx%0gy%pwpg%c#it$nb_gv12(d&y&h#c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['medium-scraper-django.herokuapp.com', '127.0.0.1']
 
 # Application definition
 
