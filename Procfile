@@ -1,1 +1,1 @@
-web: gunicorn medium_scrapper.wsgi --log-file -
+web: python manage.py runserver medium-scraper-django.herokuapp.com:443
