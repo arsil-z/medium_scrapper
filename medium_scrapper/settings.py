@@ -81,17 +81,16 @@ def get_env_value(variable_name):
 		raise ImproperlyConfigured('{} environment variable is not set'.format(variable_name))
 	return variable_value
 
-
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
 	'default': {
 		'ENGINE': 'django.db.backends.postgresql',
-		'NAME': 'medium_scraper',
+		'NAME': get_env_value('DB_NAME'),
 		'USER': get_env_value('DB_USER'),
 		'PASSWORD': get_env_value('DB_PASSWORD'),
-		'HOST': 'localhost',
+		'HOST': get_env_value('DB_HOST'),
 		'PORT': '5432',
 	}
 }
