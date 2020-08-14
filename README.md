@@ -40,18 +40,20 @@ At this stage you have successfully done with the installation of project, it is
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'medium_scraper', [ create database of same name ]
+        'NAME': get_env_value('DB_NAME'), [ database name ]
         'USER': get_env_value('DB_USER'),  [ posgresql username ]
         'PASSWORD': get_env_value('DB_PASSWORD'), [ Your password ]
-        'HOST': 'localhost',
+        'HOST': get_env_value('DB_HOST'), [ localhost ]
         'PORT': '5432',
     }
 }
 ```
 
-The above code will require to set Environment Variables into your system, if you are using PyCharm you can use the configuration option available to set the headers. In that headers you add two entries:
-1. 'DB_USER' and it's value to your PostgreSQL database username.
-2. 'DB_PASSWORD' and it's value to your PostgreSQL database password.
+The above code will require to set Environment Variables into your system, if you are using PyCharm you can use the configuration option available to set the headers. In that headers you add following four entries:
+1. 'DB_NAME' create database of same name
+2. 'DB_USER' and it's value to your PostgreSQL database username.
+3. 'DB_PASSWORD' and it's value to your PostgreSQL database password.
+4. 'DB_HOST' in local user loaclhost.
 After setting the headers write the below code to import the configured Environment Variables.
 
 ```python
